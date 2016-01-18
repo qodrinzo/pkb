@@ -1,0 +1,13 @@
+{
+	"name": "qodrinzo/pkb",
+	"description": "Personal Knowledge Base",
+	"authors": [
+        {
+            "name": "Mohammad Ghodrati",
+            "email": "qodrati.m@gmail.com"
+        }
+    ],
+	"require": {
+		"slim/slim": "^3.0"
+	}
+}
