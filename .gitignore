@@ -1,1 +1,7 @@
 /vendor/
+/node_modules/
+/contents/**
+/contents/drafts/**
+!/contents/drafts/.gitkeep
+!/contents/.htaccess
+config.php
