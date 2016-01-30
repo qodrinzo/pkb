@@ -6,15 +6,11 @@
 		<title><?=$site['title']?></title>
 		<link href="<?=$site['root']?>vendor/zurb/foundation/dist/foundation.min.css" rel="stylesheet">
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
-
-		<link rel="stylesheet" href="<?=$site['root']?>concord/concord.css">
 		<link rel="stylesheet" href="<?=$site['root']?>dist/css/styles.min.css">
 
-		<script src="<?=$site['root']?>concord/libraries/jquery-1.9.1.min.js"></script>
-		<script src="<?=$site['root']?>concord/libraries/getCaretOffset.js"></script>
+		<script src="//code.jquery.com/jquery-1.12.0.min.js"></script>
 		<script src="<?=$site['root']?>vendor/zurb/foundation/dist/foundation.min.js"></script>
-		<script src="<?=$site['root']?>concord/concord.js"></script>
-		<script src="<?=$site['root']?>concord/concordUtils.js"></script>
+		<script src="<?=$site['root']?>dist/js/scripts.js"></script>
 	</head>
 	<body>
 		<div class="off-canvas-wrapper">
@@ -33,6 +29,7 @@
 									<a href="#">New</a>
 									<ul class="submenu menu vertical" data-submenu>
 										<li><a href="<?=$site['root']?>new/know">Know</a></li>
+										<li><a href="<?=$site['root']?>new/book">Book</a></li>
 									</ul>
 								</li>
 								<li><a href="#">Two</a></li>

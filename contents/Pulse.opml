@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<opml version="2.0">
+	<head>
+		<title>Pulse</title>
+		<dateModified>Wed, 27 Jan 2016 01:35:12 GMT</dateModified>
+		<expansionState>1,2,4,7,9,10,12,20,27</expansionState>
+	</head>
+	<body>
+		<outline text="&lt;b&gt;Pulse&lt;/b&gt;">
+			<outline text="because of the pressure wave in the wall of vessels, not of the blood flow (15:1)">
+				<outline text="It's velocity goes ↑ as it propagates:">
+					<outline text="aorta: 3-5 m/s"/>
+					<outline text="large arteries: 7-10 m/s"/>
+					<outline text="small vessels: 15-35 m/s"/>
+					</outline>
+				</outline>
+			<outline text="Heart Rate (HR)">
+				<outline text="max. HR = 220 - age"/>
+				<outline text="target HR = 60-80% of max. HR"/>
+				</outline>
+			<outline text="Pulse Rate (PR)">
+				<outline text="normally equals HR, when there's no arrhythmia"/>
+				</outline>
+			<outline text="Affecting factors">
+				<outline text="↑ HR">
+					<outline text="shock, hemorrhage, dehydration"/>
+					<outline text="fever, heat exhaustion">
+						<outline text="each 0.56 °C, adds 10 beats"/>
+						</outline>
+					<outline text="pain, anxiety, stress, physical activity"/>
+					<outline text="hyperthyroidism"/>
+					<outline text="anemia"/>
+					<outline text="caffeine &amp; other stimulators"/>
+					<outline text="smoking"/>
+					<outline text="asthmatic drugs"/>
+					</outline>
+				<outline text="↓ HR ">
+					<outline text="hypothyroidism"/>
+					<outline text="cardiovascular illnesses and drugs"/>
+					<outline text="hypothermia"/>
+					<outline text="anorexia nervousa"/>
+					<outline text="severe heat exhaustion"/>
+					<outline text="depressants (eg. alcohol)"/>
+					</outline>
+				<outline text="weakening pulse">
+					<outline text="heart failure"/>
+					<outline text="low BP"/>
+					<outline text="shock, hemorrhage, dehydration, persistent vomiting"/>
+					<outline text="malnutrition"/>
+					<outline text=""/>
+					</outline>
+				</outline>
+			</outline>
+	</body>
+</opml>

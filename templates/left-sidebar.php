@@ -1,7 +1,4 @@
 <ul id="recent_knowledeges">
-	<!--
-	<?php print_r($recent_files); ?>
-	-->
 <?php
 sort_by_date($recent_files);
 $output = '';

@@ -2,7 +2,7 @@
 var gulp = require('gulp');
 
 // Include Our Plugins
-//var jshint = require('gulp-jshint');
+var jshint = require('gulp-jshint');
 var sass = require('gulp-sass');
 var concat = require('gulp-concat');
 var uglify = require('gulp-uglify');
@@ -45,11 +45,11 @@ gulp.task('styles', function() {
 
 // Watch Files For Changes
 gulp.task('watch', function() {
-	//gulp.watch('js/*.js', ['lint', 'scripts']);
+	gulp.watch('js/*.js', ['lint', 'scripts']);
 	gulp.watch('scss/*.scss', ['sass', 'styles']);
 	//gulp.watch('less/*.less', ['less', 'styles']);
     //gulp.watch('dist/**/*', ['copydist']);
 });
 
 // Default Task
-gulp.task('default', [ 'sass', 'styles', 'watch']);
+gulp.task('default', ['lint', 'scripts', 'sass', 'styles', 'watch']);

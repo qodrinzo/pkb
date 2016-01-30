@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<opml version="2.0">
+	<head>
+		<title>Blood Pressure</title>
+		<dateModified>Wed, 27 Jan 2016 02:34:27 GMT</dateModified>
+		<expansionState>1,4,5,7,9,10,15,20,21</expansionState>
+	</head>
+	<body>
+		<outline text="&lt;b&gt;Blood Pressure&lt;/b&gt;">
+			<outline text="[controversial to &lt;a href=&quot;./Pulse&quot;&gt;Pulse&lt;/a&gt;,] because of the blood flow"/>
+			<outline text="indicates heart work"/>
+			<outline text="Cuff size, relative to the arm circumference">
+				<outline text="length [horizontally]">
+					<outline text="80% of that"/>
+					</outline>
+				<outline text="width [vertically]">
+					<outline text="40% of that"/>
+					</outline>
+				</outline>
+			<outline text="Affecting factors">
+				<outline text="daytime">
+					<outline text="decrease at night"/>
+					</outline>
+				<outline text="anxiety, stress"/>
+				<outline text="weight"/>
+				<outline text="physical activity"/>
+				<outline text="drugs">
+					<outline text="salt, alcohol"/>
+					<outline text="decongestants"/>
+					<outline text="anti-inflammatory"/>
+					<outline text="steroid"/>
+					</outline>
+				</outline>
+			<outline text="How to measure">
+				<outline text="periodically">
+					<outline text="the same hand/foot used to measure"/>
+					<outline text="the same sphygmomanometer"/>
+					<outline text="the same daytime"/>
+					<outline text="the same position (ie. sitting, standing)"/>
+					</outline>
+				</outline>
+			</outline>
+	</body>
+</opml>

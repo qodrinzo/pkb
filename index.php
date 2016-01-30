@@ -2,16 +2,13 @@
 require 'vendor/autoload.php';
 require 'config.php';
 
-use League\Flysystem\Filesystem;
-use League\Flysystem\Adapter\Local;
-
 // Create app
 $app = new \Slim\App;
 
 // Get container
 $container = $app->getContainer();
 
-// Register component on container
+// Register components on container
 $container['config'] = function ($container) {
     return new PKB\Config;
 };
@@ -19,8 +16,8 @@ $container['view'] = function ($container) {
     return new \Slim\Views\PhpRenderer('./templates/');
 };
 $container['filesystem'] = function ($container) {
-    $adapter = new Local(__DIR__.'/contents');
-    return new Filesystem($adapter);
+    $adapter = new League\Flysystem\Adapter\Local(__DIR__.'/contents');
+    return new League\Flysystem\Filesystem($adapter);
 };
 
 // Define app routes
@@ -28,29 +25,8 @@ $app->get('/', function ($request, $response, $args) {
     template($this, 'know', '_index', 0, array('recent_files' => $files));
 });
 
-$app->group('/new', function () {
-    $this->get('/know', function ($request, $response, $args) {
-        template($this, 'know', 0, 'New Knowledge');
-    });
-});
-
-$app->post('/open', function ($request, $response, $args) {
-    $file = $request->getParsedBody()['id'] . '.opml';
-    if ($this->filesystem->has($file)) {
-        //$response->withHeader('Content-type', 'application/xml+opml');
-        $response->withHeader('Content-type', 'text/x-opml');
-        return $response->write($this->filesystem->read($file));
-    } else {
-        return $response->withStatus(404);
-    }
-});
-
-$app->post('/save', function ($request, $response, $args) {
-    $this->filesystem->put($request->getParsedBody()['id'] . '.opml', $request->getParsedBody()['opml']);
-});
-
 $app->group('/know', function() {
-    $this->get('/drafts/{name}', function ($request, $response, $args) {
+    $this->get('/Draft:{name}', function ($request, $response, $args) {
         template($this, 'know');
     });
 
@@ -66,27 +42,71 @@ $app->group('/know', function() {
     })->setName('know');
 });
 
+$app->group('/new', function () {
+    $this->get('/know', function ($request, $response, $args) {
+        template($this, 'know', 0, 'New Knowledge');
+    });
+});
+
+$app->post('/open', function ($request, $response, $args) {
+    $file = $request->getParsedBody()['id'] . '.opml';
+    if ($this->filesystem->has($file)) {
+        //$response->withHeader('Content-type', 'application/xml+opml');
+        $response->withHeader('Content-type', 'text/x-opml');
+        return $response->write($this->filesystem->read($file));
+    } else {
+        $response->withStatus(404);
+        $response->withHeader('Content-type', 'text/x-opml');
+        return $response->write($this->filesystem->read('_404.opml'));
+    }
+});
+
+$app->post('/save', function ($request, $response, $args) {
+    if ( $this->filesystem->put($request->getParsedBody()['id'] . '.opml', $request->getParsedBody()['opml']) ) {
+        return json_encode(array(
+            'saved' => true,
+            'filename' => $request->getParsedBody()['id'] . '.opml',
+            'path' => $request->getParsedBody()['id']
+        ));
+    }
+
+});
+
 function template($app, $template, $file_id = false, $page_title = false, $args = array()) {
     $config_clone = (array) $app->config;
+    $is_draft = false;
 
     $uri_parts = explode('/', $_SERVER['REQUEST_URI']);
     end($uri_parts);
     prev($uri_parts);
 
     if ( current($uri_parts) == 'know' ) {
-        $config_clone['file_id'] = end($uri_parts);
-    } elseif ( current($uri_parts) == 'drafts' ) {
-        $config_clone['file_id'] = 'drafts/' . end($uri_parts);
+        $matches = array();
+        if ( preg_match("/^Draft:(.*)$/", end($uri_parts), $matches) !== 0 ) {
+            // Draft
+            $draft_id = $matches[1];
+            $config_clone['file_id'] = str_replace( 'Draft:', 'drafts/', end($uri_parts) );
+            $is_draft = true;
+        } else {
+            // non-Draft
+            $config_clone['file_id'] = end($uri_parts);
+        }
     } elseif ( $file_id ) {
         $config_clone['file_id'] = $file_id;
     }
 
-    if ( isset($config_clone['file_id']) ) {
-        $config_clone['site']['title'] .= ' | ' . ucwords( str_replace('_' , '', $config_clone['file_id']) );
+    if ( isset($config_clone['file_id']) && !$app->filesystem->has($config_clone['file_id'] . '.opml') && !$page_title ) {
+        $config_clone['site']['title'] .= ' | Not Found';
+        $config_clone['file_id'] = '_404';
+    } elseif ( $is_draft ) {
+        $config_clone['site']['title'] .= ' | Draft: ' . ucwords( str_replace('_' , ' ', $draft_id) );
+    } elseif ( isset($config_clone['file_id']) ) {
+        $config_clone['site']['title'] .= ' | ' . ucwords( str_replace('_' , ' ', $config_clone['file_id']) );
     } elseif ( $page_title ) {
         $config_clone['site']['title'] .= ' | ' . $page_title;
     }
 
+    $config_clone['is_draft'] = $is_draft;
     return $app->view->render($app->response, $template . '.php', array_merge($config_clone, $args, array('recent_files' => listFiles($app->filesystem))));
 }
 
@@ -97,7 +117,7 @@ function listFiles($filesystem) {
             unset($files[$k]);
             continue;
         }
-        //$files[$k]['filename'] = str_replace('.opml', '', $v['filename']);
+        $files[$k]['path'] = str_replace('drafts/', 'Draft:', $v['path']);
     }
     return $files;
 }
