@@ -1,6 +1,7 @@
 /vendor/
 /node_modules/
-/contents/**/**.**
+/contents/*
 !/contents/.htaccess
+!/contents/*.sys.opml
 config.php
 !**/.gitkeep
