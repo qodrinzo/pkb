@@ -3,10 +3,23 @@
 namespace PKB;
 
 class Config {
+	static $dev_mode = true;
+	static $local    = true;
+
 	public $site = [
 		'title'	=> 'PKB',
-		'root'	=> 'http://localhost/pkb/'
+		'title_long' => 'Personal Knowledge Base',
+		'root'	=> 'http://localhost/pkb/',
 	];
+
+	public $doctypes = [
+		'sys',
+		'know',
+		'notebook',
+		'tag',
+	];
+
+	public $restricted = '#[\\/|?<>*:"]#';
 }
 
 ?>

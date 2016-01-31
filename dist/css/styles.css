@@ -199,9 +199,6 @@ body {
     .editor-toolbar ul a:hover {
       color: #777; }
 
-.file-info aside {
-  display: none; }
-
 .no-js .file-info aside {
   display: block !important; }
 

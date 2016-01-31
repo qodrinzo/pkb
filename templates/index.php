@@ -6,27 +6,26 @@ include 'header.php';
 		<main id="site_main" role="main">
 			<article>
 				<header class="entry-title small-12 column">
-					<h1></h1>
+					<h1><?=$this->file['title']?></h1>
 				</header>
 				<div class="file-info medium-3 large-2 columns">
 					<div class="button-group">
 						<button type="button" class="edit_title button secondary"><i class="fa fa-pencil fa-lg"></i></button>
 						<button type="button" class="set_title_image button secondary"><i class="fa fa-file-image-o fa-lg"></i></button>
-						<a class="button secondary" href="./<?=$file_id?>"><i class="fa fa-external-link fa-lg"></i></a>
 					</div>
 					<aside>
 						<article>
 							<label>Title
-								<?php // IDEA: For filename beginning with underscore, we should not replace with space ?>
-								<input type="text" name="outline_title" pattern='[^\\/*?:"<>|]' id="outline_title" placeholder="File Name" value="<?=(isset($file_id))?str_replace('_', ' ', $file_id):''?>">
+								<input type="text" name="outline_title" class="outline_title" placeholder="Outline Title">
 							</label>
-							<p class="help-text">Also for naming the file as <i></i>.opml</p>
 							<label>Disambiguation
-								<input type="text" name="outline_title_disambiguation" pattern='[^\\/*?:"<>|]' id="outline_title_disambiguation" placeholder="Disambiguation">
+								<input type="text" name="outline_disambiguation" class="outline_disambiguation" pattern='[^\\/*?:"<>|]' placeholder="Title disambiguation">
+							</label>
+							<label>File name
+								<input type="text" name="outline_filename" class="outline_filename" pattern='[^\\/*?:"<>|]' placeholder="File name" readonly>
 							</label>
 							<div class="button-group stacked">
 								<button type="button" class="save_btn success button">Save</button>
-								<button type="button" class="draft_btn warning button">Draft</button>
 								<button type="button" class="delete_btn alert button">Delete</button>
 							</div>
 						</article>
@@ -46,7 +45,7 @@ include 'header.php';
 								<li><a href="@undo"><i class="fa fa-undo"></i></a></li>
 							</ul>
 						</nav>
-						<div class="divOutlinerContainer coulmns">
+						<div class="divOutlinerContainer" data-outline-id="<?=$this->file['id']?>" data-outline-doctype="<?=$this->file['doctype']?>">
 							<div class="outliner" tabindex="1">
 							</div>
 						</div>

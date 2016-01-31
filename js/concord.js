@@ -621,6 +621,7 @@ if (!Array.prototype.indexOf) {
 				}
 				if (options.id) {
 					this.root.data("id", options.id);
+					this.root.data("doctype", options.doctype);
 					this.open(options.callbacks.cbOpen);
 				}
 			}
@@ -743,7 +744,8 @@ if (!Array.prototype.indexOf) {
 		};
 		this.open = function(cb) {
 			var opmlId = this.root.data("id");
-			if (!opmlId) {
+			var opmlDocType = this.root.data("doctype");
+			if (!opmlId || !opmlDocType) {
 				return;
 			}
 			var root = this.root;
@@ -759,6 +761,7 @@ if (!Array.prototype.indexOf) {
 			} else {
 				params.id = opmlId;
 			}
+			params.doctype = opmlDocType;
 			$.ajax({
 				type: 'POST',
 				url: openUrl,
@@ -768,7 +771,7 @@ if (!Array.prototype.indexOf) {
 					if (opml) {
 						op.xmlToOutline(opml);
 						if (cb) {
-							cb();
+							cb(op);
 						}
 					}
 				},
@@ -780,9 +783,9 @@ if (!Array.prototype.indexOf) {
 			});
 		};
 		this.save = function(cb) {
-			var opmlId;
-			opmlId = this.root.data("id");
-			if ( opmlId.match(/[\\/*?:"<>|]/) ) {
+			var opmlId = this.root.data("id");
+			var opmlDocType = this.root.data("doctype");
+			if ( opmlId.match(/[\\\/*?:"<>|]/) || this.root.data("prefts").doctypes.indexOf(opmlDocType) == -1 ) {
 				return;
 			}
 			if (opmlId && this.op.changed()) {
@@ -797,7 +800,8 @@ if (!Array.prototype.indexOf) {
 					url: saveUrl,
 					data: {
 						"opml": opml,
-						"id": opmlId
+						"id": opmlId,
+						"doctype": opmlDocType
 					},
 					dataType: "json",
 					success: function(json) {

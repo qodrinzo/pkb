@@ -1,7 +1,6 @@
 /vendor/
 /node_modules/
 /contents/**/**.**
-!/contents/drafts/.gitkeep
 !/contents/.htaccess
 config.php
 !**/.gitkeep

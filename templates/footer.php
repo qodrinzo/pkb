@@ -5,35 +5,52 @@
 		(function($){
 			$(document).foundation();
 			$(document).ready (function () {
+				var outliners = [];
+
 				var title_old = $('#outline_title').val();
 				var disambig_old = $('#outline_title_disambiguation').val();
 
-				var outlinerId = ".outliner";
-				defaultUtilsOutliner = outlinerId;
-				var myoutline = $(outlinerId).concord ({
-					"prefs": {
-						"outlineFont": "Georgia",
-						"outlineFontSize": 18,
-						"outlineLineHeight": 24,
-						"renderMode": true,
-						"readonly": false,
-						"typeIcons": appTypeIcons
-					},
-					"callbacks": {
-						"cbOpen": function() {
-							$('.entry-title h1').text(opGetTitle());
-							title_old = $('#outline_title').val();
-							disambig_old = $('#outline_title_disambiguation').val();
-						}
-					},
-					"open": "<?=$site['root']?>open",
-					"save": "<?=$site['root']?>save",
-					<?=(isset($file_id)) ? "\"id\": \"$file_id\"" : ""?>
-				});
-				opXmlToOutline (initialOpmltext);
+				defaultUtilsOutliner = '.outliner';
 
-				$('#outline_title').on('keyup change', function(e){
-					$('+ .help-text i', $(this).parent()).text($(this).val());
+				$('.divOutlinerContainer').each( function(index) {
+					var outline_file = {
+						'id'		: $(this).attr("data-outline-id"),
+						'doctype'	: $(this).attr("data-outline-doctype")
+					};
+
+					var article = $(this).parents('article');
+					article.attr('id', 'outliner-' + index);
+
+					outliners[index] = $('.outliner', article)
+						.concord({
+							"prefs": {
+								"outlineFont": "Georgia",
+								"outlineFontSize": 18,
+								"outlineLineHeight": 24,
+								"renderMode": true,
+								"readonly": false,
+								"typeIcons": appTypeIcons,
+								"doctypes": <?=json_encode($this->doctypes)?>,
+							},
+							"callbacks": {
+								"cbOpen": function(op) {
+									$('.entry-title h1', article).text(op.getTitle());
+									$('.outline_title', article).val(op.getTitle());
+									$('.outline_disambiguation', article).val();
+									$('.outline_filename', article).val(outline_file.id + '.' + outline_file.doctype + '.opml');
+
+									//title_old = $('#outline_title').val();
+									//disambig_old = $('#outline_title_disambiguation').val();
+								}
+							},
+							"open"		: "<?=$this->site['root']?>open",
+							"save"		: "<?=$this->site['root']?>save",
+							"id"		: outline_file.id,
+							"doctype"	: outline_file.doctype,
+						});
+					if (!outline_file.id) {
+						outliners[index].op.xmlToOutline (initialOpmltext);
+					}
 				});
 
 				$('.save_btn').on('click', function() {
@@ -47,8 +64,8 @@
 					} else {
 						opMarkChanged();
 					}
-					err[0]= title.val().match(/[\\/*?:"<>|]/) ? true : false;
-					err[1] = (title.val().match(/[\\/*?:"<>|]/) && title.val() !== "") ? true : false;
+					err[0]= title.val().match(/[\\\/*?:"<>|]/) ? true : false;
+					err[1] = (title.val().match(/[\\\/*?:"<>|]/) && title.val() !== "") ? true : false;
 					if (err[0] || title.val() === "") {
 						title.css('border-color', 'red');
 					}
@@ -89,7 +106,6 @@
 					}
 				});
 
-				$('.entry-title h1').text(opGetTitle());
 				$('.edit_title').on('click', function(e){
 					e.preventDefault();
 					$(this).parents('.file-info').find('aside').slideToggle();
