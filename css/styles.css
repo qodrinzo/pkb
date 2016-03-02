@@ -27,6 +27,10 @@ body {
 #primary {
   padding-top: 25px; }
 
+#site_main {
+  position: relative;
+  padding-bottom: 80px; }
+
 #recent_knowledeges {
   background: #111; }
   #recent_knowledeges > li {
@@ -47,9 +51,17 @@ body {
       #recent_knowledeges > li:hover span.label {
         background-color: rgba(255, 174, 0, 0.9); }
 
+.entry {
+  padding-left: 30px; }
+
+.menu-text a {
+  color: inherit;
+  font-weight: inherit; }
+
 .editor-toolbar {
   width: 40px;
-  padding: 0; }
+  padding: 100px 0 0 0;
+  position: absolute; }
   .editor-toolbar ul a {
     color: #999; }
     .editor-toolbar ul a:hover {
@@ -57,6 +69,14 @@ body {
 
 .no-js .file-info aside {
   display: block !important; }
+
+#action-bar {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  left: 0; }
+  #action-bar .button-group {
+    margin-bottom: 0; }
 
 /*.concord-level-1:first-child {
 	border-bottom: 1px solid gainsboro;

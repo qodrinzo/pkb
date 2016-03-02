@@ -6,9 +6,8 @@
 			$(document).foundation();
 			$(document).ready (function () {
 				var outliners = [];
-
-				var title_old = $('#outline_title').val();
-				var disambig_old = $('#outline_title_disambiguation').val();
+				var title_old = [];
+				var disambig_old = [];
 
 				defaultUtilsOutliner = '.outliner';
 
@@ -30,18 +29,18 @@
 								"renderMode": true,
 								"readonly": false,
 								"typeIcons": appTypeIcons,
-								"doctypes": <?=json_encode($this->doctypes)?>,
+								"doctypes": <?=json_encode(array_keys($this->doctypes))?>,
 							},
 							"callbacks": {
 								"cbOpen": function(op) {
 									$('.entry-title h1', article).text(op.getTitle());
 									$('.outline_title', article).val(op.getTitle());
-									$('.outline_disambiguation', article).val();
+									$('.outline_disambiguation', article).val(op.getHeaders().disambiguation || '');
 									$('.outline_filename', article).val(outline_file.id + '.' + outline_file.doctype + '.opml');
 
-									//title_old = $('#outline_title').val();
-									//disambig_old = $('#outline_title_disambiguation').val();
-								}
+									title_old[index] = $('.outline_title', article).val();
+									disambig_old[index] = $('.outline_disambiguation', article).val();
+								},
 							},
 							"open"		: "<?=$this->site['root']?>open",
 							"save"		: "<?=$this->site['root']?>save",
@@ -50,38 +49,62 @@
 						});
 					if (!outline_file.id) {
 						outliners[index].op.xmlToOutline (initialOpmltext);
+						title_old[index] = $('.outline_title', article).val();
+						disambig_old[index] = $('.outline_disambiguation', article).val();
 					}
 				});
 
-				$('.save_btn').on('click', function() {
+				$('.save_btn').on('click', function(e) {
+					e.preventDefault();
 					var err = [];
 					var i = 0;
-					var title = $('#outline_title', $(this).parents('.file-info'));
-					var disambig = $('#outline_title_disambiguation', $(this).parents('.file-info'));
-					if (!opHasChanged() && title.val() == title_old && disambig.val() == disambig_old) {
-						alert('no changes!');
+					var article, article_index, active_outliner, title, disambig;
+					article = $('.outliner').parents('article.is-active');
+					article_index = article.attr("id").replace("outliner-", "");
+					title = $('.outline_title', article);
+					disambig = $('.outline_disambiguation', article);
+
+					if ( article.length !== 1 ) {
+						return;
+						console.log('More than one active outliner is ridiculous!');
+					}
+
+					if (!opHasChanged() && title.val() == title_old[article_index] && disambig.val() == disambig_old[article_index]) {
+						console.log('No changes!');
 						return;
 					} else {
 						opMarkChanged();
 					}
-					err[0]= title.val().match(/[\\\/*?:"<>|]/) ? true : false;
-					err[1] = (title.val().match(/[\\\/*?:"<>|]/) && title.val() !== "") ? true : false;
-					if (err[0] || title.val() === "") {
+
+					err[0]= ( title.val().match(/[\\\/*?:"<>|]/) || title.val() === "") ? true : false;
+					err[1] = ( disambig.val().match(/[\\\/*?:"<>|]/) && disambig.val() !== "" ) ? true : false;
+					if (err[0]) {
 						title.css('border-color', 'red');
 					}
 					if (err[1]) {
 						disambig.css('border-color', 'red');
 					}
 					if (err[0] || err[1]) {
-						alert('eerr!');
+						console.log('Inputs error: ' + err);
 						return;
 					}
-					title = title.val();
-					title += (disambig.val()) ? ' (' + disambig.val() + ')' : '';
-					opSetTitle(title);
-					$(defaultUtilsOutliner).concord().save();
-					alert('end of function!');
-					//opRedraw();
+
+					active_outliner = $('.outliner', article).concord();
+					if ( active_outliner.op.setTitle( title.val() ) ) {
+						console.log("title set!");
+					}
+					var outliner_file_id = title.val();
+					outliner_file_id += disambig.val() ? '_(' + disambig.val() + ')' : '';
+					if ( active_outliner.op.setId(outliner_file_id) ) {
+						console.log("id set!");
+					}
+					active_outliner.op.addHeaders({
+						"disambiguation" : disambig.val()
+					});
+
+					active_outliner.save(function(json) {
+						console.log(json);
+					});
 				});
 
 				$('.editor-toolbar a').on('click', function(e){
@@ -104,11 +127,6 @@
 						case "link":
 							break;
 					}
-				});
-
-				$('.edit_title').on('click', function(e){
-					e.preventDefault();
-					$(this).parents('.file-info').find('aside').slideToggle();
 				});
 			});
 

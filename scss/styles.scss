@@ -37,6 +37,8 @@ body {
 	padding-top: 25px;
 }
 #site_main {
+	position: relative;
+	padding-bottom: 80px;
 }
 #file_title_container {
 }
@@ -68,9 +70,17 @@ body {
 		}
 	}
 }
+.entry {
+	padding-left: 30px;
+}
+.menu-text a {
+	color: inherit;
+	font-weight: inherit;
+}
 .editor-toolbar {
 	width: 40px;
-	padding: 0;
+	padding: 100px 0 0 0;
+	position: absolute;
 	ul {
 		a {
 			color: #999;
@@ -86,6 +96,17 @@ body {
 	}
 	.no-js & aside {
 		display: block !important;
+	}
+}
+#action-bar {
+	position: absolute;
+	bottom: 0;
+	right: 0;
+	left: 0;
+	.button-group {
+		margin-bottom: 0;
+		button {
+		}
 	}
 }
 

@@ -13,10 +13,10 @@ class Config {
 	];
 
 	public $doctypes = [
-		'sys',
-		'know',
-		'notebook',
-		'tag',
+		'sys'		=> 'Systemic',
+		'know'		=> 'Knowledge',
+		'notebook'	=> 'Notebook',
+		'tag'		=> 'Tag',
 	];
 
 	public $restricted = '#[\\/|?<>*:"]#';

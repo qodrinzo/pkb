@@ -24,13 +24,14 @@ $container['filesystem'] = function ($container) {
     $adapter = new \League\Flysystem\Adapter\Local(__DIR__.'/contents');
     return new \League\Flysystem\Filesystem($adapter);
 };
-$container['view'] = function ($container) use ($container) {
+$container['view'] = function ($container) {
     $tmpl = new \PKB\Template('./templates/');
 
     // Set global variables for templates
     $tmpl->site                 = $container->config->site;
     $tmpl->doctypes             = $container->config->doctypes;
     $tmpl->restricted           = $container->config->restricted;
+    $tmpl->recent_files         = listFiles($container->filesystem);
     return $tmpl;
 };
 
@@ -76,16 +77,18 @@ $app->get('/know/{name}', function ($request, $response, $args) {
 })->setName('know');
 
 $app->group('/new', function () {
-    // new.sys.opml
-    $this->get('/know', function ($request, $response, $args) {
-        // new-know.sys.opml
-        $this->view->file = [
-            'id'        => false,
-            'doctype'   => 'sys',
-            'title'     => 'New knowledge',
-        ];
-        return $this->view->render($response, 'index.php', $args);
-    });
+    // Dynamically set routes for different doctypes
+    foreach ($this->getContainer()->config->doctypes as $k => $v) {
+        $this->get("/$k", function ($request, $response, $args) use ($k, $v) {
+            // loads nothing beacause of id set to false, but provides some info to save later
+            $this->view->file = [
+                'id'        => false,
+                'doctype'   => "$k",
+                'title'     => "New $v",
+            ];
+            return $this->view->render($response, 'index.php', $args);
+        });
+    }
 });
 
 $app->post('/open', function ($request, $response, $args) {
@@ -102,7 +105,7 @@ $app->post('/open', function ($request, $response, $args) {
     // Check if requested name is not valid
     //  or doctype is not included in allowed doctypes list
     if ( preg_match($this->config->restricted, $file['id'])
-            ||  !in_array($file['doctype'], $this->config->doctypes) ) {
+            ||  !array_key_exists($file['doctype'], $this->config->doctypes) ) {
         //403.sys.opml
         return $response->withStatus(403)
                         ->write($this->filesystem->read('403.sys.opml'));
@@ -120,14 +123,34 @@ $app->post('/open', function ($request, $response, $args) {
 });
 
 $app->post('/save', function ($request, $response, $args) {
-    if ( $this->filesystem->put($request->getParsedBody()['id'] . '.opml', $request->getParsedBody()['opml']) ) {
-        return json_encode(array(
-            'saved' => true,
-            'filename' => $request->getParsedBody()['id'] . '.opml',
-            'path' => $request->getParsedBody()['id']
-        ));
+    $target_file = $request->getParsedBody()['id'] . '.' . $request->getParsedBody()['doctype'] . '.opml';
+    if ( $request->getParsedBody()['id'] && $request->getParsedBody()['doctype'] && $this->filesystem->put($target_file, $request->getParsedBody()['opml']) ) {
+        return $response->withHeader('Content-type', 'application/json')
+                        ->withStatus(200)
+                        ->write(
+                            json_encode(array(
+                                'saved' => true,
+                                'file' => [
+                                    'id' => $request->getParsedBody()['id'],
+                                    'doctype' => $request->getParsedBody()['doctype'],
+                                    'path' => $target_file,
+                                ],
+                            ))
+                        );
+    } else {
+        return $response->withHeader('Content-type', 'application/json')
+                        ->withStatus(400)
+                        ->write(
+                            json_encode(array(
+                                'saved' => false,
+                                'file' => [
+                                    'id' => $request->getParsedBody()['id'],
+                                    'doctype' => $request->getParsedBody()['doctype'],
+                                    'path' => $target_file,
+                                ],
+                            ))
+                        );
     }
-
 });
 
 // Functions used
@@ -147,19 +170,23 @@ function page_title($custom_title = '', $data_file_path = '') {
 
 // Waiting...
 function listFiles($filesystem) {
-    $files = $filesystem->listContents('/', true);
+    $files = $filesystem->listContents("/", true);
     foreach ($files as $k => $v) {
-        if ( $v['type'] == 'dir' || in_array( substr($v['basename'], 0, 1), ['_', '.'] ) ) {
+        if ($v['extension'] != 'opml') {
             unset($files[$k]);
             continue;
         }
-        $files[$k]['path'] = str_replace('drafts/', 'Draft:', $v['path']);
+        $doctype_dot = strrpos($v['filename'], '.');
+        $probable_doctype = substr($v['filename'], $doctype_dot + 1);
+        if ( $doctype_dot === false || !in_array($probable_doctype, ['know', 'sys']) ) {
+            $files[$k]['doctype'] = null;
+            $files[$k]['docname'] = null;
+            continue;
+        }
+        $files[$k]['doctype'] = $probable_doctype;
+        $files[$k]['docname'] = substr($v['filename'], 0, $doctype_dot);
     }
     return $files;
-}
-
-function is_draft($file) {
-    return $file['dirname'] == 'drafts';
 }
 
 function sort_by_date(&$files) {
@@ -170,25 +197,6 @@ function sort_by_date(&$files) {
     });
 }
 
-function file_info($file_path) {
-    $file = pathinfo($file_path);
-    $file['path'] = $file_path;
-    $file['doctype'] = null;
-
-    $parts = explode('.', $file['filename']);
-
-    end($parts);
-    if ( in_array(current($parts), ['know', 'draft', 'book', 'tag']) )
-        $file['doctype'] = current($parts);
-
-    $len = 0;
-    $doctype_len = strlen($file['doctype']);
-    $len += ($doctype_len) ? $doctype_len + 1 : 0;
-    if ($len)
-        $file['filename'] = substr($file['filename'], 0, -$len);
-
-    return $file;
-}
 function get_doctype($opml_name) {
 
 }

@@ -17,7 +17,7 @@
 		<div class="off-canvas-wrapper">
 			<div class="off-canvas-wrapper-inner" data-off-canvas-wrapper>
 				<div class="off-canvas position-left reveal-for-large" id="offCanvas" data-off-canvas>
-					<?php // include "left-sidebar.php" ?>
+					<?php include "left-sidebar.php" ?>
 				</div>
 				<div class="off-canvas-content" data-off-canvas-content>
 
@@ -25,12 +25,13 @@
 						<div class="top-bar-left">
 							<ul class="dropdown menu" data-dropdown-menu>
 								<li class="hide-for-large"><button class="menu-icon" type="button" data-toggle="offCanvas"></button></li>
-								<li class="menu-text"><?=$this->site['title_long']?></li>
+								<li class="menu-text"><a href="<?=$this->site['root']?>"><?=$this->site['title_long']?></a></li>
 								<li class="has-submenu">
 									<a href="#">New</a>
 									<ul class="submenu menu vertical" data-submenu>
-										<li><a href="<?=$this->site['root']?>new/know">Know</a></li>
-										<li><a href="<?=$this->site['root']?>new/book">Book</a></li>
+										<?php foreach($this->doctypes as $k => $v) : ?>
+										<li><a href="<?=$this->site['root']?>new/<?=$k?>"><?=$v?></a></li>
+										<?php endforeach; ?>
 									</ul>
 								</li>
 								<li><a href="#">Two</a></li>

@@ -619,9 +619,11 @@ if (!Array.prototype.indexOf) {
 				if (options.callbacks) {
 					this.callbacks(options.callbacks);
 				}
+				if (options.doctype) {
+					this.root.data("doctype", options.doctype);
+				}
 				if (options.id) {
 					this.root.data("id", options.id);
-					this.root.data("doctype", options.doctype);
 					this.open(options.callbacks.cbOpen);
 				}
 			}
@@ -785,7 +787,8 @@ if (!Array.prototype.indexOf) {
 		this.save = function(cb) {
 			var opmlId = this.root.data("id");
 			var opmlDocType = this.root.data("doctype");
-			if ( opmlId.match(/[\\\/*?:"<>|]/) || this.root.data("prefts").doctypes.indexOf(opmlDocType) == -1 ) {
+			if ( opmlId.match(/[\\\/*?:"<>|]/) || this.root.data("prefs").doctypes.indexOf(opmlDocType) == -1 ) {
+				console.log('err1');
 				return;
 			}
 			if (opmlId && this.op.changed()) {
@@ -1989,7 +1992,7 @@ if (!Array.prototype.indexOf) {
 			this.markChanged();
 		},
 		this.level = function() {
-				return this.getCursor().parents(".concord-node").length + 1;
+			return this.getCursor().parents(".concord-node").length + 1;
 		},
 		this.link = function(url) {
 			if (this.inTextMode()) {
@@ -2223,8 +2226,12 @@ if (!Array.prototype.indexOf) {
 			return new ConcordOp(root, concordInstance, cursor);
 		};
 		this.setHeaders = function(headers) {
-				root.data("head", headers);
-				this.markChanged();
+			root.data("head", headers);
+			this.markChanged();
+		},
+		this.addHeaders = function(headers) {
+			root.data("head", $.extend({}, root.data("head"), headers));
+			this.markChanged();
 		},
 		this.setLineText = function(text) {
 			this.saveState();
