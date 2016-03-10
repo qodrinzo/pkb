@@ -111,12 +111,27 @@
 					e.preventDefault();
 					var action = $(this).attr('href');
 					action = action.substring(1);
+					var subaction = action.match(/\[.*\]/);
+					if (subaction) {
+						subaction = subaction.toString();
+						action = action.replace(subaction, '');
+						subaction = subaction.substring(1, subaction.length-1);
+					}
 					switch( action ) {
 						case "header":
 							if ($(defaultUtilsOutliner).concord().op.attributes.getOne("type") == "header") {
-								console.log($(defaultUtilsOutliner).concord().op.attributes.removeOne("type"));
+								$(defaultUtilsOutliner).concord().op.attributes.removeOne("type");
 							} else {
 								$(defaultUtilsOutliner).concord().op.attributes.setGroup({"type": "header"});
+							}
+							break;
+						case "list":
+							if ( subaction === null ) {
+								// Do nothing because something clicked that opens a submenu containing list types
+							} else if ( subaction === "" ) {
+								$(defaultUtilsOutliner).concord().op.attributes.removeOne("list");
+							} else {
+								$(defaultUtilsOutliner).concord().op.attributes.setGroup({"list": subaction});
 							}
 							break;
 						case "bold":

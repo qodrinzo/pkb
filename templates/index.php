@@ -12,6 +12,14 @@ include 'header.php';
 			<nav class="editor-toolbar">
 				<ul class="menu vertical">
 					<li><a href="@header" title="Make header"><i class="fa fa-header"></i></a></li>
+					<li>
+						<a href="@list" title="Make up a list of its children" data-toggle="example-dropdown"><i class="fa fa-list-ul"></i></a>
+						<ul class="menu dropdown-pane right" id="example-dropdown" data-dropdown data-hover="true" data-hover-pane="true" style="padding: 0; width: auto">
+							<li><a href="@list[number]" title="Numbered list"><i class="fa fa-hashtag"></i></a></li>
+							<li><a href="@list[minus]" title="Dash list"><i class="fa fa-minus"></i></a></li>
+							<li><a href="@list[]" title="unlist"><i class="fa fa-remove" style="color: #ec5840"></i></a></li>
+						</ul>
+					</li>
 					<li><a href="@bold" title="Make bold"><i class="fa fa-bold"></i></a></li>
 					<li><a href="@italic" title="Make italic"><i class="fa fa-italic"></i></a></li>
 					<li><a href="@strikethrough" title="Make strikethrough"><i class="fa fa-strikethrough"></i></a></li>
@@ -33,10 +41,10 @@ include 'header.php';
 					</div>
 				</div>
 				<div class="file-info medium-3 large-2 columns">
-					<div class="button-group">
+					<!--<div class="button-group">
 						<button type="button" class="edit_title button secondary"><i class="fa fa-pencil fa-lg"></i></button>
 						<button type="button" class="set_title_image button secondary"><i class="fa fa-file-image-o fa-lg"></i></button>
-					</div>
+					</div>-->
 					<aside>
 						<article>
 							<label>Title
