@@ -112,6 +112,13 @@
 					var action = $(this).attr('href');
 					action = action.substring(1);
 					switch( action ) {
+						case "header":
+							if ($(defaultUtilsOutliner).concord().op.attributes.getOne("type") == "header") {
+								console.log($(defaultUtilsOutliner).concord().op.attributes.removeOne("type"));
+							} else {
+								$(defaultUtilsOutliner).concord().op.attributes.setGroup({"type": "header"});
+							}
+							break;
 						case "bold":
 							opBold();
 							break;

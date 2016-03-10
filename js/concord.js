@@ -2701,6 +2701,11 @@ if (!Array.prototype.indexOf) {
 					this._cssTextClass("");
 				}
 				delete this.getAll()[name];
+				if (name == "type" || name == "icon") {
+					var wrapper = cursor.children(".concord-wrapper");
+					var icon = "<i" + " class=\"node-icon fa fa-caret-right\"><" + "/i>";
+					wrapper.children(".node-icon:first").replaceWith(icon);
+				}
 				concordInstance.op.markChanged();
 				return true;
 			}

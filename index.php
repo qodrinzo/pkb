@@ -168,7 +168,6 @@ function page_title($custom_title = '', $data_file_path = '') {
     $container->view->page['title'] .= $container->view->site['title'];
 }
 
-// Waiting...
 function listFiles($filesystem) {
     $files = $filesystem->listContents("/", true);
     foreach ($files as $k => $v) {
@@ -195,10 +194,6 @@ function sort_by_date(&$files) {
     		return 0;
     	return ($a['timestamp'] > $b['timestamp']) ? -1 : 1;
     });
-}
-
-function get_doctype($opml_name) {
-
 }
 
 // Run app

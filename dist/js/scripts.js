@@ -2701,6 +2701,11 @@ if (!Array.prototype.indexOf) {
 					this._cssTextClass("");
 				}
 				delete this.getAll()[name];
+				if (name == "type" || name == "icon") {
+					var wrapper = cursor.children(".concord-wrapper");
+					var icon = "<i" + " class=\"node-icon fa fa-caret-right\"><" + "/i>";
+					wrapper.children(".node-icon:first").replaceWith(icon);
+				}
 				concordInstance.op.markChanged();
 				return true;
 			}
@@ -3199,7 +3204,8 @@ if (!Array.prototype.indexOf) {
 
 // Copyright 2013-2014, Small Picture, Inc.
 var appTypeIcons = {
-	"blogpost": "file-text-alt",
+	"header": "header",
+	/*"blogpost": "file-text-alt",
 	"code": "laptop",
 	"html": "file-text-alt",
 	"include": "share-alt", //5/19/13 by DW
@@ -3218,7 +3224,7 @@ var appTypeIcons = {
 	"calendar": "calendar", //6/3/13 by DW
 	"markdown": "file-text-alt", //6/3/13 by DW
 	"tweet": "twitter", //6/10/13 by DW
-	"metaWeblogPost": "file-text-alt"
+	"metaWeblogPost": "file-text-alt"*/
 };
 var initialOpmltext = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><opml version=\"2.0\"><head><title>Untitled</title></head><body><outline text=\"\"/></body></opml>";
 
