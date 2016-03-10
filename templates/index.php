@@ -15,10 +15,10 @@ include 'header.php';
 					<li><a href="@bold" title="Make bold"><i class="fa fa-bold"></i></a></li>
 					<li><a href="@italic" title="Make italic"><i class="fa fa-italic"></i></a></li>
 					<li><a href="@strikethrough" title="Make strikethrough"><i class="fa fa-strikethrough"></i></a></li>
-					<li><a href="@highlight" title="Highlight text"><i class="fa fa-eyedropper"></i></a></li>
+					<!--<li><a href="@highlight" title="Highlight text"><i class="fa fa-eyedropper"></i></a></li>
 					<li><a href="@link" title="Insert link"><i class="fa fa-link"></i></a></li>
 					<li><a href="@unlink" title="Remove link"><i class="fa fa-unlink"></i></a></li>
-					<li><a href="@linktoimg" title="Add image to current cursor"><i class="fa fa-file-image-o"></i></a></li>
+					<li><a href="@linktoimg" title="Add image to current cursor"><i class="fa fa-file-image-o"></i></a></li>-->
 					<li><a href="@undo" title="Undo"><i class="fa fa-undo"></i></a></li>
 				</ul>
 			</nav>
